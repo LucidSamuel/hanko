@@ -3,13 +3,14 @@ package config
 import (
 	"errors"
 	"fmt"
+	"log"
+	"strings"
+	"time"
+
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
-	"log"
-	"strings"
-	"time"
 )
 
 // Config is the central configuration type
@@ -37,7 +38,7 @@ func Load(cfgFile *string) (*Config, error) {
 	}
 
 	err = k.Load(env.Provider("", ".", func(s string) string {
-		return strings.Replace(strings.ToLower(s), "_", ".", -1)
+		return strings.ReplaceAll(strings.ToLower(s), "_", ".")
 	}), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load config from env vars: %w", err)
